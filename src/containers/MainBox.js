@@ -22,6 +22,9 @@ class MainBox extends React.Component {
   }
 
   handleFetch = () => {
+    this.setState({
+      loaded: false
+    })
     fetch(`https://www.googleapis.com/books/v1/volumes?q=${this.state.searchValue}&orderBy=relevance&key=AIzaSyCvWbjTPUGhdu509kwqKShHyICeEB_JuDw&maxResults=5&startIndex=0&filter=partial`)
     .then(res => res.json())
     .then(data => this.setState({

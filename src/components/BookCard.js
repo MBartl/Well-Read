@@ -11,8 +11,8 @@ class BookCard extends React.Component {
           <img src={imageLinks.thumbnail} alt={title}/>
           <h2>{title}</h2>
           {authors ? <h4>{authors.map( author => `"${author}"\n` )}</h4> : null}
-          <p>Publish Date: {publishedDate}</p>
-          <p>Page Count: {pageCount}</p>
+          {publishedDate ? <p>Publish Date: {publishedDate}</p> : null }
+          {pageCount? <p>Page Count: {pageCount}</p> : null }
         </Card>
       )
     }
