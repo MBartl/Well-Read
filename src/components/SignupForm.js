@@ -10,7 +10,7 @@ class SignupForm extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault()
-		console.log("LOGGING IN", this.state)
+
 		fetch("http://localhost:3000/api/v1/users", {
 			method: "POST",
 			headers: {
@@ -28,7 +28,7 @@ class SignupForm extends React.Component {
 				// console.log(response)
 				localStorage.setItem("token", response.token)
 				this.props.setCurrentUser(response.user)
-				this.props.history.push("/mainbox")
+				this.props.history.push("/search")
 			}
 		})
 	}
