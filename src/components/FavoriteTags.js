@@ -22,23 +22,32 @@ class FavoriteTags extends React.Component {
     return (
       this.props.favTags.split(", ").map((tag, index) => {
         return(
-          index === 0 || index % 3 ?
-          <ButtonGroup key={index} variant="contained"
-          aria-label="Full-width contained primary button group">
-            <Button key={index}
-              style={{backgroundColor: this.getTagColor()}}
-              onClick={(event) => {
-                let favoriteId = this.props.favorite.id
-                if (this.handleClick(event.target.innerText, favoriteId)) {
-                  this.props.deleteTag(event.target.innerText, favoriteId)
-                }
-              }}>
-              {tag}
-            </Button>
-          </ButtonGroup>
+          index === 0 || index % 3 === 0 ?
+          <React.Fragment key={index}>
+            <br />
+            <ButtonGroup key={index} variant="contained"
+            aria-label="Full-width contained primary button group">
+              <Button key={index}
+                style={{backgroundColor: this.getTagColor()}}
+                onClick={(event) => {
+                  let favoriteId = this.props.favorite.id
+                  if (this.handleClick(event.target.innerText, favoriteId)) {
+                    this.props.deleteTag(event.target.innerText, favoriteId)
+                  }
+                }}>
+                {tag}
+              </Button>
+            </ButtonGroup>
+          </React.Fragment>
           :
           <Button key={index}
-            style={{backgroundColor: this.getTagColor()}}>
+            style={{backgroundColor: this.getTagColor()}}
+            onClick={(event) => {
+              let favoriteId = this.props.favorite.id
+              if (this.handleClick(event.target.innerText, favoriteId)) {
+                this.props.deleteTag(event.target.innerText, favoriteId)
+              }
+            }}>
             {tag}
           </Button>
         )

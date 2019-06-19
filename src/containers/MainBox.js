@@ -52,13 +52,13 @@ class MainBox extends React.Component {
           this.props.setRandomFalse()
           this.setState({
             searchValue: this.props.randomSearch
-          })          
+          })
         }
       })
       .then(() => console.log(this.state.bookList))
   }
 
-  handleRandomFetch = () => {
+  handleRandomFetch = (event) => {
     if (this.props.toggleRandom === true) {
       this.handleFetch()
     }

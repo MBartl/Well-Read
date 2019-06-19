@@ -65,9 +65,7 @@ class FavoriteButtons extends React.Component {
         {favTags ?
           <React.Fragment>
             <FavoriteTags favTags={favTags} favorite={this.props.favorite} deleteTag={this.deleteTag}/>
-            <div>
-              <br />
-            </div>
+            <div><br /></div>
           </React.Fragment>
         :
           null
