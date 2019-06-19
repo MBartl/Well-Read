@@ -133,7 +133,7 @@ class App extends Component {
   render(){
     return (
       <div className="App">
-        <span style={{display: "flex", justifyContent: "center"}}>
+        <span style={{display: "flex", justifyContent: "center", paddingRight: "5.8em"}}>
           <img onClick={() => this.setRandom()}
             src="http://res.publicdomainfiles.com/pdf_view/132/13970482814262.png"
             alt="well"
