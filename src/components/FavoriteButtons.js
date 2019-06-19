@@ -56,6 +56,10 @@ class FavoriteButtons extends React.Component {
     alert("Please enter a tag")
   }
 
+  handleReviewClick = (book) => {
+    this.props.review(book)
+  }
+
   render() {
     let favTags;
     if (this.state.tags) {favTags = this.state.tags};
@@ -77,7 +81,12 @@ class FavoriteButtons extends React.Component {
             Remove
           </Button>
           <Button variant="contained" color="primary"
-            onClick={() => this.toggleEdit()}>Edit Tags
+            onClick={() => this.toggleEdit()}>
+            Edit Tags
+          </Button>
+          <Button variant="contained"
+            style={{color: "white", backgroundColor: "#54A546"}}
+            onClick={() => this.handleReviewClick(this.props.favorite.book)}>Review
           </Button>
         </div>
 

@@ -89,7 +89,8 @@ class BookCard extends React.Component {
 
             <FavoriteButtons addTagToDB={this.addTagToDB}
               removeFavorite={this.props.removeFavorite}
-              favorite={this.props.book.favorite} /> :
+              favorite={this.props.book.favorite}
+              review={this.props.review} /> :
           null
         }
 
