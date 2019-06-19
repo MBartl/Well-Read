@@ -4,33 +4,47 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
 
 
-const FavoriteTags = (props) => {
+class FavoriteTags extends React.Component {
 
-  function getTagColor() {
+  getTagColor = () => {
     let hue = Math.floor(Math.random() * 360);
     let pastel = 'hsl(' + hue + ', 100%, 80%)';
     return pastel;
   }
 
-  return (
-    props.favTags.split(", ").map((tag, index) => {
-      return(
-        index === 0 || index % 3 ?
+  handleClick = (tag, favoriteId) => {
+    let check = window.confirm("Delete this tag?")
+
+    return check
+  }
+
+  render() {
+    return (
+      this.props.favTags.split(", ").map((tag, index) => {
+        return(
+          index === 0 || index % 3 ?
           <ButtonGroup key={index} variant="contained"
           aria-label="Full-width contained primary button group">
             <Button key={index}
-              style={{backgroundColor: getTagColor()}}>
+              style={{backgroundColor: this.getTagColor()}}
+              onClick={(event) => {
+                let favoriteId = this.props.favorite.id
+                if (this.handleClick(event.target.innerText, favoriteId)) {
+                  this.props.deleteTag(event.target.innerText, favoriteId)
+                }
+              }}>
               {tag}
             </Button>
           </ButtonGroup>
-        :
-        <Button key={index}
-          style={{backgroundColor: getTagColor()}}>
-          {tag}
-        </Button>
-      )
-    })
-  );
+          :
+          <Button key={index}
+            style={{backgroundColor: this.getTagColor()}}>
+            {tag}
+          </Button>
+        )
+      })
+    );
+  }
 }
 
 export default FavoriteTags;

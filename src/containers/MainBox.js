@@ -26,18 +26,22 @@ class MainBox extends React.Component {
 
   checkEnter = (event) => {
     if (event.nativeEvent.key === "Enter") {
-      this.handleFetch()
+        this.handleFetch()
     }
   }
 
   handleFetch = () => {
-    fetch(`https://www.googleapis.com/books/v1/volumes?q=${this.state.searchValue}&orderBy=relevance&key=AIzaSyCvWbjTPUGhdu509kwqKShHyICeEB_JuDw&startIndex=${(this.state.currentPage-1)*10}&filter=partial&projection=full`)
-    .then(res => res.json())
-    .then(data => this.setState({
-      bookList: data.items,
-      loaded: true
-    }))
-    .then(() => console.log(this.state.bookList))
+    const APIKEY = `${process.env.REACT_APP_API_KEY}`
+    this.state.searchValue === "" ?
+      alert("Please enter a search term") :
+
+      fetch(`https://www.googleapis.com/books/v1/volumes?q=${this.state.searchValue}&orderBy=relevance&key=${APIKEY}&startIndex=${(this.state.currentPage-1)*10}&filter=partial&projection=full`)
+      .then(res => res.json())
+      .then(data => this.setState({
+        bookList: data.items,
+        loaded: true
+      }))
+      .then(() => console.log(this.state.bookList))
   }
 
   render(){
@@ -59,7 +63,7 @@ class MainBox extends React.Component {
         :
           null
         }
-        <BookListContainer cardView={this.props.cardView} favorites={this.props.favorites} bookList={this.state.bookList} loaded={this.state.loaded} removeFavorite={this.props.removeFavorite} currentUser={this.props.currentUser}/>
+        <BookListContainer cardView={this.props.cardView} favorites={this.props.favorites} bookList={this.state.bookList} loaded={this.state.loaded} removeFavorite={this.props.removeFavorite} currentUser={this.props.currentUser} favsLoaded={this.props.loaded} />
       </div>
     )}
   }

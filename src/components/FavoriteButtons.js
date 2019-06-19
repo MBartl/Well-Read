@@ -20,6 +20,7 @@ class FavoriteButtons extends React.Component {
   }
 
   addToTags = (event) => {
+    event.preventDefault()
     if (this.state.tags) {
       this.setState({
         tags: `${this.state.tags}, ${event.target.value}`
@@ -34,6 +35,27 @@ class FavoriteButtons extends React.Component {
     this.props.addTagToDB(event, this.props.favorite.id)
   }
 
+  deleteTag = (tag, favoriteId) => {
+    JSON.stringify({remove: tag})
+
+    fetch(`http://localhost:3000/api/v1/removetag/${favoriteId}`, {
+      method: "PATCH",
+      headers: {"Content-Type": "application/json", "Accepts": "application/json"},
+      body: JSON.stringify({remove: tag})
+    })
+    .then(res => res.json())
+    .then(fav => {
+      this.setState({
+        tags: this.state.tags.split(', ').filter(ea => ea.toLowerCase() !== tag.toLowerCase()).join(', ')
+      })
+    })
+  }
+
+  stopNilTag = (event) => {
+    event.preventDefault()
+    alert("Please enter a tag")
+  }
+
   render() {
     let favTags;
     if (this.state.tags) {favTags = this.state.tags};
@@ -41,12 +63,15 @@ class FavoriteButtons extends React.Component {
       <React.Fragment>
 
         {favTags ?
-          <FavoriteTags favTags={favTags} />
+          <React.Fragment>
+            <FavoriteTags favTags={favTags} favorite={this.props.favorite} deleteTag={this.deleteTag}/>
+            <div>
+              <br />
+            </div>
+          </React.Fragment>
         :
           null
         }
-
-        <br />
 
         <div className="Primary Buttons">
           <Button variant="contained" color="secondary"
@@ -59,10 +84,13 @@ class FavoriteButtons extends React.Component {
         </div>
 
         <form className="Edit Tags" hidden={this.state.hideEdit}>
-          <TextField label="Tags" multiline rowsMax="4" margin="normal"
+          <TextField label="Tags" margin="normal"
             onKeyPress={(event) => {
               if (event.key === "Enter") {
-                this.addToTags(event)
+                event.target.value === "" ?
+                  this.stopNilTag(event)
+                :
+                  this.addToTags(event)
               }
             }}
           helperText="Press enter to submit"/>
