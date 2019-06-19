@@ -31,17 +31,37 @@ class MainBox extends React.Component {
   }
 
   handleFetch = () => {
+    let searchValue = this.state.searchValue
+
+    if (this.props.toggleRandom) {
+      searchValue = this.props.randomSearch
+    }
+
     const APIKEY = `${process.env.REACT_APP_API_KEY}`
-    this.state.searchValue === "" ?
+    searchValue === "" ?
       alert("Please enter a search term") :
 
-      fetch(`https://www.googleapis.com/books/v1/volumes?q=${this.state.searchValue}&orderBy=relevance&key=${APIKEY}&startIndex=${(this.state.currentPage-1)*10}&filter=partial&projection=full`)
+      fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchValue}&orderBy=relevance&key=${APIKEY}&startIndex=${(this.state.currentPage-1)*10}&filter=partial&projection=full`)
       .then(res => res.json())
       .then(data => this.setState({
         bookList: data.items,
         loaded: true
       }))
+      .then(() => {
+        if (this.props.toggleRandom) {
+          this.props.setRandomFalse()
+          this.setState({
+            searchValue: this.props.randomSearch
+          })          
+        }
+      })
       .then(() => console.log(this.state.bookList))
+  }
+
+  handleRandomFetch = () => {
+    if (this.props.toggleRandom === true) {
+      this.handleFetch()
+    }
   }
 
   render(){
@@ -54,11 +74,20 @@ class MainBox extends React.Component {
           <React.Fragment>
             <FormControl style={{width: 300}}>
               <InputLabel htmlFor="component-simple">Search</InputLabel>
-              <Input id="component-simple" onKeyPress={this.checkEnter.bind(this)} onChange={this.handleChange} value={this.state.searchValue} name="searchValue"/>
+              {
+                this.props.toggleRandom ?
+                  <Input id="component-simple" onLoad={this.handleRandomFetch()} value={this.state.searchValue}
+                  name="searchValue" /> :
+                  <Input id="component-simple" onKeyPress={this.checkEnter.bind(this)} onChange={this.handleChange} value={this.state.searchValue} name="searchValue" />
+              }
             </FormControl>
-            <Button style={{marginTop: "1em"}} onClick={this.handleFetch}>
-              <SearchIcon />
-            </Button>
+            <span>
+              <Button style={{marginBottom: "2.2em"}} onClick={this.handleFetch}>
+                <SearchIcon />
+              </Button>
+              <img src="https://books.google.com/googlebooks/images/poweredby.png"
+                alt="Powered by Google" style={{paddingTop: "1.4em"}}/>
+            </span>
           </React.Fragment>
         :
           null

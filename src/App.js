@@ -13,6 +13,8 @@ class App extends Component {
     favorites: [],
 		currentUser: null,
     cardView: '',
+    randomSearch: '',
+    toggleRandom: false,
     loaded: false
 	}
 
@@ -79,11 +81,8 @@ class App extends Component {
   }
 
   cardSearch = () => {
-    // if (this.state.cardView === 'favorites') {
-    //   this.refreshUser()
-    // }
-
     this.setState({
+      randomSearch: false,
       cardView: 'search'
     })
   }
@@ -110,9 +109,38 @@ class App extends Component {
     )
   }
 
+  setRandom = () => {
+    const booksArray = ["Lord of the Rings", "Le Petit Prince", "Harry Potter", "The Hobbit", "And Then There Were None", "The Lion, the Witch and the Wardrobe", "The Da Vinci Code", "The Catcher in the Rye", "The Bridges of Madison County", "Charlotte's Web", "Lolita", "The Very Hungry Caterpillar", "The Tale of Peter Rabbit", "To Kill a Mockingbird", "Flowers in the Attic", "Angels & Demons", "The Kite Runner", "Gone with the Wind", "Nineteen Eighty-Four", "The Great Gatsby", "The Hunger Games", "The Fault in Our Stars", "The Girl on the Train", "The Godfather", "What to Expect When You're Expecting", "Dune", "Goodnight Moon", "The Grapes of Wrath", "The Hitchhiker's Guide to the Galaxy"]
+
+    const title = booksArray[Math.floor(Math.random() * booksArray.length)]
+
+    if (this.state.toggleRandom === false) {
+      this.cardSearch()
+      this.props.history.push("/search")
+      this.setState({
+        randomSearch: title,
+        toggleRandom: true
+      })
+    }
+  }
+
+  setRandomFalse = () => {
+    this.setState({
+      toggleRandom: false
+    })
+  }
+
   render(){
     return (
       <div className="App">
+        <span style={{display: "flex", justifyContent: "center"}}>
+          <img onClick={() => this.setRandom()}
+            src="http://res.publicdomainfiles.com/pdf_view/132/13970482814262.png"
+            alt="well"
+            style={{backgroundColor: this.state.toggleRandom ? '#303156' : null,
+            borderRadius: "35px", height: "78px", width: "auto", cursor: "pointer"}} />
+          <img src="https://fontmeme.com/permalink/190619/71c3f590e3aed5a51bef5d833b5b07fb.png" alt="Well Read" />
+        </span>
         <NavBar setFavorites={this.setFavorites} favorites={this.cardFavorites} search={this.cardSearch} currentUser={this.state.currentUser} logOut={this.logOut} />
         <Switch>
           <Route path="/login" render={(routerProps) => {
@@ -122,7 +150,7 @@ class App extends Component {
             return <SignupForm setCurrentUser={this.setCurrentUser} {...routerProps}/>
           }} />
           <Route path="/search" render={(routerProps) => {
-            return <MainBox favorites={this.state.favorites} cardView={this.state.cardView} currentUser={this.state.currentUser} {...routerProps}/>
+            return <MainBox favorites={this.state.favorites} cardView={this.state.cardView} currentUser={this.state.currentUser} toggleRandom={this.state.toggleRandom} setRandom={this.setRandom} randomSearch={this.state.randomSearch} setRandomFalse={this.setRandomFalse} {...routerProps}/>
           }} />
           <Route path="/favorites" render={(routerProps) => {
             return <MainBox loaded={this.state.loaded} favorites={this.state.favorites} setFavorites={this.setFavorites} removeFavorite={this.removeFavorite.bind(this)} cardView={this.state.cardView} currentUser={this.state.currentUser} {...routerProps}/>
