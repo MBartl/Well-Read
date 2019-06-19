@@ -20,6 +20,7 @@ class FavoriteButtons extends React.Component {
   }
 
   addToTags = (event) => {
+    event.preventDefault()
     if (this.state.tags) {
       this.setState({
         tags: `${this.state.tags}, ${event.target.value}`
@@ -34,6 +35,11 @@ class FavoriteButtons extends React.Component {
     this.props.addTagToDB(event, this.props.favorite.id)
   }
 
+  stopNilTag = (event) => {
+    event.preventDefault()
+    alert("Please enter a tag")
+  }
+
   render() {
     let favTags;
     if (this.state.tags) {favTags = this.state.tags};
@@ -41,12 +47,15 @@ class FavoriteButtons extends React.Component {
       <React.Fragment>
 
         {favTags ?
-          <FavoriteTags favTags={favTags} />
+          <React.Fragment>
+            <FavoriteTags favTags={favTags} favorite={this.props.favorite} />
+            <div>
+              <br />
+            </div>
+          </React.Fragment>
         :
           null
         }
-
-        <br />
 
         <div className="Primary Buttons">
           <Button variant="contained" color="secondary"
@@ -59,10 +68,13 @@ class FavoriteButtons extends React.Component {
         </div>
 
         <form className="Edit Tags" hidden={this.state.hideEdit}>
-          <TextField label="Tags" multiline rowsMax="4" margin="normal"
+          <TextField label="Tags" margin="normal"
             onKeyPress={(event) => {
               if (event.key === "Enter") {
-                this.addToTags(event)
+                event.target.value === "" ?
+                  this.stopNilTag(event)
+                :
+                  this.addToTags(event)
               }
             }}
           helperText="Press enter to submit"/>
