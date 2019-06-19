@@ -1,8 +1,11 @@
 import React from 'react';
+
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
+
 class LoginForm extends React.Component {
+  
   state = {
     username: "",
     password: ""
@@ -10,7 +13,7 @@ class LoginForm extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault()
-		// console.log("LOGGING IN", this.state)
+
 		fetch("http://localhost:3000/api/v1/login", {
 			method: "POST",
 			headers: {

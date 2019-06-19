@@ -1,11 +1,14 @@
 import React from 'react';
+
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
-import BookListContainer from './BookListContainer.js';
-import { Redirect } from 'react-router-dom';
 import SearchIcon from '@material-ui/icons/Search';
+
+import BookListContainer from './BookListContainer';
+import { Redirect } from 'react-router-dom';
+
 
 class MainBox extends React.Component {
   state = {
@@ -39,61 +42,27 @@ class MainBox extends React.Component {
 
   render(){
     if (this.props.currentUser === null) {
-      // console.log("here")
-      // this.props.history.push("/")
       return <Redirect to="/" />
     } else {
-    return (
+      return (
       <div>
         {this.props.cardView === 'search' ?
-          <container style={{display: "flex",justifyContent: "center",flexDirection: "row",alignItems: "center"}}>
-            <FormControl style={{width: 281}}>
+          <React.Fragment>
+            <FormControl style={{width: 300}}>
               <InputLabel htmlFor="component-simple">Search</InputLabel>
               <Input id="component-simple" onKeyPress={this.checkEnter.bind(this)} onChange={this.handleChange} value={this.state.searchValue} name="searchValue"/>
             </FormControl>
-            <Button style={{marginTop: "auto"}} onClick={this.handleFetch}>
+            <Button style={{marginTop: "1em"}} onClick={this.handleFetch}>
               <SearchIcon />
             </Button>
-          </container>
+          </React.Fragment>
         :
           null
         }
         <BookListContainer cardView={this.props.cardView} favorites={this.props.favorites} bookList={this.state.bookList} loaded={this.state.loaded} removeFavorite={this.props.removeFavorite} currentUser={this.props.currentUser}/>
       </div>
-    )
-  }}
+    )}
+  }
 }
 
-
-
 export default MainBox
-
-// fetch("http://localhost:3000/api/v1/users", {
-// 			method: "POST",
-// 			headers: {
-// 				"Content-Type": "application/json",
-// 				"Accepts": "application/json",
-// 			},
-// 			body: JSON.stringify({
-//     user: {
-//       username: 'guy',
-//       password: 'hi'
-//     }
-//   })})
-// 		.then(res => res.json())
-// 		.then(console.log)
-
-// fetch("http://localhost:3000/api/v1/login", {
-// 			method: "POST",
-// 			headers: {
-// 				"Content-Type": "application/json",
-// 				"Accepts": "application/json",
-// 			},
-// 			body: JSON.stringify({
-//     user: {
-//       username: 'guy',
-//       password: 'hi'
-//     }
-//   })})
-// 		.then(res => res.json())
-// 		.then(console.log)

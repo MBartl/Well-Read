@@ -1,6 +1,10 @@
 import React from 'react';
+
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
+
+import FavoriteButtons from './FavoriteButtons';
+
 
 class BookCard extends React.Component {
 
@@ -30,42 +34,62 @@ class BookCard extends React.Component {
       },
       body: JSON.stringify({book_id: book.id, user_id: this.props.currentUser.id})
     })
-    .then(res => res.json())
-    .then(doc => console.log(doc))
+    .then(alert("This book has been added to your favorites!"))
   }
 
-  render(){
+  addTagToDB = (event, favoriteId) => {
+    const input = event.target.value
+    fetch(`http://localhost:3000/api/v1/favorites/${favoriteId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Accepts": "application/json"
+      },
+      body: JSON.stringify({tags: input})
+    })
+    .then(event.target.value = '')
+  }
+
+
+  render() {
     const {imageLinks, title, authors, pageCount, publishedDate} = this.props.book.volumeInfo
     return (
       <Card style={{width: 345, margin: 3}}>
 
-        {this.props.cardView === 'search' ?
+
+        <h2>{title}</h2>
+
+
+        { this.props.cardView === 'search' ?
           <React.Fragment>
-            <h2>{title}</h2>
-            {authors ? <h4>{authors.map( author => `"${author}"\n`)}</h4> : null}
+            {authors ? <h4>{authors.join(", ")}</h4> : null}
             <img src={imageLinks.thumbnail} alt={title}/>
-            {publishedDate ? <p>Publish Date: {publishedDate}</p> : null }
-            {pageCount? <p>Page Count: {pageCount}</p> : null }
-            <div>
-              <Button variant="contained"
-                onClick={() => this.favoriteBook(this.props.book)}>Favorite
-              </Button>
-            </div>
           </React.Fragment> :
 
           <React.Fragment>
-            <h2>{title}</h2>
             {authors ? <h4>{authors}</h4> : null}
             <img src={this.props.book.volumeInfo.thumbnail_url} alt={title} />
-            {publishedDate ? <p>Publish Date: {publishedDate}</p> : null }
-            {pageCount? <p>Page Count: {pageCount}</p> : null }
-            <div>
-              <Button variant="contained" color="secondary"
-                onClick={() => this.props.removeFavorite(this.props.book.favoriteId)}>Remove
-              </Button>
-            </div>
           </React.Fragment>
         }
+
+
+        {publishedDate ? <p>Publish Date: {publishedDate}</p> : null }
+        {pageCount ? <p>Page Count: {pageCount}</p> : null }
+
+
+        { this.props.cardView === 'search' ?
+
+          <div>
+            <Button variant="contained"
+              onClick={() => this.favoriteBook(this.props.book)}>Favorite
+            </Button>
+          </div> :
+
+          <FavoriteButtons addTagToDB={this.addTagToDB}
+            removeFavorite={this.props.removeFavorite}
+            favorite={this.props.book.favorite} />
+        }
+
       </Card>
     )
   }
