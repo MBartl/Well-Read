@@ -12,7 +12,8 @@ class App extends Component {
   state = {
     favorites: [],
 		currentUser: null,
-    cardView: 'search'
+    cardView: '',
+    loaded: false
 	}
 
 	componentDidMount(){
@@ -31,7 +32,8 @@ class App extends Component {
 					alert(response.errors)
 				} else {
 					this.setState({
-						currentUser: response
+						currentUser: response,
+            loaded: true
 					})
 				}
 			})
@@ -44,6 +46,11 @@ class App extends Component {
     .then(user => this.setState({
       currentUser: user
     }))
+    .then(() => {
+      this.setState({
+        loaded: false
+      })
+    })
     .then(() => {
       this.setFavorites()
     })
@@ -72,6 +79,10 @@ class App extends Component {
   }
 
   cardSearch = () => {
+    // if (this.state.cardView === 'favorites') {
+    //   this.refreshUser()
+    // }
+
     this.setState({
       cardView: 'search'
     })
@@ -85,7 +96,8 @@ class App extends Component {
       })
       favorites.shift()
       this.setState({
-        favorites: favorites
+        favorites: favorites,
+        loaded: true
       })
     }
   }
@@ -113,7 +125,7 @@ class App extends Component {
             return <MainBox favorites={this.state.favorites} cardView={this.state.cardView} currentUser={this.state.currentUser} {...routerProps}/>
           }} />
           <Route path="/favorites" render={(routerProps) => {
-            return <MainBox favorites={this.state.favorites} setFavorites={this.setFavorites} removeFavorite={this.removeFavorite.bind(this)} cardView={this.state.cardView} currentUser={this.state.currentUser} {...routerProps}/>
+            return <MainBox loaded={this.state.loaded} favorites={this.state.favorites} setFavorites={this.setFavorites} removeFavorite={this.removeFavorite.bind(this)} cardView={this.state.cardView} currentUser={this.state.currentUser} {...routerProps}/>
           }} />
         </Switch>
       </div>

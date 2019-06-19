@@ -35,6 +35,22 @@ class FavoriteButtons extends React.Component {
     this.props.addTagToDB(event, this.props.favorite.id)
   }
 
+  deleteTag = (tag, favoriteId) => {
+    JSON.stringify({remove: tag})
+
+    fetch(`http://localhost:3000/api/v1/removetag/${favoriteId}`, {
+      method: "PATCH",
+      headers: {"Content-Type": "application/json", "Accepts": "application/json"},
+      body: JSON.stringify({remove: tag})
+    })
+    .then(res => res.json())
+    .then(fav => {
+      this.setState({
+        tags: this.state.tags.split(', ').filter(ea => ea.toLowerCase() !== tag.toLowerCase()).join(', ')
+      })
+    })
+  }
+
   stopNilTag = (event) => {
     event.preventDefault()
     alert("Please enter a tag")
@@ -48,7 +64,7 @@ class FavoriteButtons extends React.Component {
 
         {favTags ?
           <React.Fragment>
-            <FavoriteTags favTags={favTags} favorite={this.props.favorite} />
+            <FavoriteTags favTags={favTags} favorite={this.props.favorite} deleteTag={this.deleteTag}/>
             <div>
               <br />
             </div>
