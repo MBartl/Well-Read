@@ -7,6 +7,7 @@ import NavBar from './components/NavBar.js';
 import LoginForm from './components/LoginForm.js';
 import SignupForm from './components/SignupForm.js';
 
+
 class App extends Component {
   state = {
     favorites: [],
@@ -80,7 +81,7 @@ class App extends Component {
     if (this.state.currentUser) {
       let favorites = [{}]
       this.state.currentUser.favorites.forEach(favorite => {
-        favorites = [...favorites, {volumeInfo: favorite.book, favoriteId: favorite.id}]
+        favorites = [...favorites, {volumeInfo: favorite.book, favorite: favorite}]
       })
       favorites.shift()
       this.setState({
@@ -92,7 +93,7 @@ class App extends Component {
   removeFavorite = (favId) => {
     fetch(`http://localhost:3000/api/v1/favorites/${favId}`, {method: "DELETE"})
     .then(() => this.setState({
-        favorites: this.state.favorites.filter(fav => fav.favoriteId !== favId)
+        favorites: this.state.favorites.filter(fav => fav.favorite.id !== favId)
       })
     )
   }
@@ -112,7 +113,7 @@ class App extends Component {
             return <MainBox favorites={this.state.favorites} cardView={this.state.cardView} currentUser={this.state.currentUser} {...routerProps}/>
           }} />
           <Route path="/favorites" render={(routerProps) => {
-            return <MainBox favorites={this.state.favorites} setFavorites={this.setFavorites} removeFavorite={this.removeFavorite} cardView={this.state.cardView} currentUser={this.state.currentUser} {...routerProps}/>
+            return <MainBox favorites={this.state.favorites} setFavorites={this.setFavorites} removeFavorite={this.removeFavorite.bind(this)} cardView={this.state.cardView} currentUser={this.state.currentUser} {...routerProps}/>
           }} />
         </Switch>
       </div>
