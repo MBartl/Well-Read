@@ -52,13 +52,13 @@ class MainBox extends React.Component {
           this.props.setRandomFalse()
           this.setState({
             searchValue: this.props.randomSearch
-          })          
+          })
         }
       })
       .then(() => console.log(this.state.bookList))
   }
 
-  handleRandomFetch = () => {
+  handleRandomFetch = (event) => {
     if (this.props.toggleRandom === true) {
       this.handleFetch()
     }
@@ -92,7 +92,7 @@ class MainBox extends React.Component {
         :
           null
         }
-        <BookListContainer cardView={this.props.cardView} favorites={this.props.favorites} bookList={this.state.bookList} loaded={this.state.loaded} removeFavorite={this.props.removeFavorite} currentUser={this.props.currentUser} favsLoaded={this.props.loaded} />
+        <BookListContainer cardView={this.props.cardView} favorites={this.props.favorites} bookList={this.state.bookList} loaded={this.state.loaded} removeFavorite={this.props.removeFavorite} currentUser={this.props.currentUser} favsLoaded={this.props.loaded} review={this.props.review} />
       </div>
     )}
   }

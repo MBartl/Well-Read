@@ -3,6 +3,8 @@ import { Switch, Route } from 'react-router-dom';
 import './App.css';
 
 import MainBox from './containers/MainBox.js';
+import BookPage from './containers/BookPage.js';
+
 import NavBar from './components/NavBar.js';
 import LoginForm from './components/LoginForm.js';
 import SignupForm from './components/SignupForm.js';
@@ -15,7 +17,8 @@ class App extends Component {
     cardView: '',
     randomSearch: '',
     toggleRandom: false,
-    loaded: false
+    loaded: false,
+    review: null
 	}
 
 	componentDidMount(){
@@ -101,6 +104,13 @@ class App extends Component {
     }
   }
 
+  review = (book) => {
+    this.setState({
+      review: book
+    })
+    this.props.history.push("/review")
+  }
+
   removeFavorite = (favId) => {
     fetch(`http://localhost:3000/api/v1/favorites/${favId}`, {method: "DELETE"})
     .then(() => this.setState({
@@ -133,7 +143,7 @@ class App extends Component {
   render(){
     return (
       <div className="App">
-        <span style={{display: "flex", justifyContent: "center"}}>
+        <span style={{display: "flex", justifyContent: "center", paddingRight: "5.8em"}}>
           <img onClick={() => this.setRandom()}
             src="http://res.publicdomainfiles.com/pdf_view/132/13970482814262.png"
             alt="well"
@@ -146,15 +156,23 @@ class App extends Component {
           <Route path="/login" render={(routerProps) => {
             return <LoginForm setCurrentUser={this.setCurrentUser} {...routerProps}/>
           }} />
+
           <Route path="/signup" render={(routerProps) => {
             return <SignupForm setCurrentUser={this.setCurrentUser} {...routerProps}/>
           }} />
+
           <Route path="/search" render={(routerProps) => {
             return <MainBox favorites={this.state.favorites} cardView={this.state.cardView} currentUser={this.state.currentUser} toggleRandom={this.state.toggleRandom} setRandom={this.setRandom} randomSearch={this.state.randomSearch} setRandomFalse={this.setRandomFalse} {...routerProps}/>
           }} />
+
           <Route path="/favorites" render={(routerProps) => {
-            return <MainBox loaded={this.state.loaded} favorites={this.state.favorites} setFavorites={this.setFavorites} removeFavorite={this.removeFavorite.bind(this)} cardView={this.state.cardView} currentUser={this.state.currentUser} {...routerProps}/>
+            return <MainBox loaded={this.state.loaded} favorites={this.state.favorites} setFavorites={this.setFavorites} removeFavorite={this.removeFavorite.bind(this)} cardView={this.state.cardView} currentUser={this.state.currentUser} review={this.review} {...routerProps}/>
           }} />
+
+          <Route path="/review" render={(routerProps) => {
+            return <BookPage review={this.state.review} {...routerProps}/>
+          }} />
+
         </Switch>
       </div>
     );
